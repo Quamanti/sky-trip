@@ -11,6 +11,7 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     flexGrow: 1,
+    flexShrink: 0,
     height: '100vh',
     overflow: 'auto',
   },

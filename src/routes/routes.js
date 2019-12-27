@@ -12,11 +12,12 @@ import { LoginPage } from '../pages/LoginPage';
 import { RegisterPage } from '../pages/RegisterPage';
 import { RecoverPasswordPage } from '../pages/RecoverPasswordPage';
 import { AccountPage } from '../pages/AccountPage';
+import { MainPage } from '../pages/MainPage/MainPage';
 
 export const makeIndexRoutes = () => (
   <MainLayout>
     <Switch>
-      <ProtectedRoute exact path="/" component={() => <div>Hello world!</div>} />
+      <ProtectedRoute exact path="/" component={MainPage} />
       <ProtectedRoute exact path="/account" component={AccountPage} />
     </Switch>
   </MainLayout>
