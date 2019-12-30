@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Drawer, Divider, makeStyles, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import InboxIcon from '@material-ui/icons/Inbox';
+import { useParams } from 'react-router-dom';
 
 import { isSideBarOpen } from '../../store/_selectors/application.selectors';
 
@@ -26,6 +27,9 @@ const useStyles = makeStyles(theme => ({
 
 const SideBarPure = ({ open }) => {
   const classes = useStyles();
+  const { idaa } = useParams();
+
+  console.log(idaa);
 
   return (
     <Drawer

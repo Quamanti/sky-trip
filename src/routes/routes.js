@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router';
+import { Route, Switch, Redirect } from 'react-router';
 
 import { ProtectedRoute } from './ProtectedRoute';
 
@@ -17,8 +17,10 @@ import { MainPage } from '../pages/MainPage/MainPage';
 export const makeIndexRoutes = () => (
   <MainLayout>
     <Switch>
-      <ProtectedRoute exact path="/" component={MainPage} />
+      <Redirect exact path="/" to="/locations" />
       <ProtectedRoute exact path="/account" component={AccountPage} />
+      <ProtectedRoute exact path="/locations" component={MainPage} />
+      <ProtectedRoute path="/locations/:idaa" component={MainPage} />
     </Switch>
   </MainLayout>
 );
