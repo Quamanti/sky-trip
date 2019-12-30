@@ -114,9 +114,9 @@ const RegisterFormPure = ({ classes, register, resetMessage }) => {
             color="primary"
             className={classes.submit}
             disabled={
-              !values.name
-              || !values.surname
-              || !values.login
+              !values.first_name
+              || !values.last_name
+              || !values.username
               || !values.email
               || !values.password
               || submitting

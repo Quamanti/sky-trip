@@ -11,7 +11,7 @@ export const history = createBrowserHistory();
 export const configureStore = () => {
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const persistentState = {
-    Users: { isAuthenticated: true /*!!getCookies().token*/ }, // TODO: uncomment
+    Users: { isAuthenticated: !!getCookies().sessionid },
   };
 
   const store = createStore(

@@ -22,13 +22,15 @@ import {
   resetMessage,
 } from '../Application/actions';
 
+import { getCookies, deleteCookie } from '../../utils/getCookies';
+
 export const authEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(AUTHENTICATE),
     mergeMap(action => ajax.post(
-      '/SkyNoteServer/api/1.0/users/login',
+      'login/',
       action.payload,
-      { 'Content-Type': 'application/x-www-form-urlencoded' },
+      { 'Content-Type': 'application/json' },
     ).pipe(
       mergeMap(() => of(
         authenticateSuccess(),
@@ -73,12 +75,15 @@ export const logoutEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(LOGOUT),
     mergeMap(() => ajax.post(
-      '/SkyNoteServer/api/1.0/users/logout',
+      'logout/',
+      {},
+      { 'X-CSRFToken': getCookies().csrftoken },
     ).pipe(
       map(() => unauthorize()),
-      catchError(() => (
-        of(unauthorize())
-      )),
+      catchError(() => {
+        deleteCookie('sessionid');
+        return of(unauthorize());
+      }),
     )),
   )
 );
@@ -87,19 +92,19 @@ export const regEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(REGISTER),
     mergeMap(action => ajax.post(
-      '/SkyNoteServer/api/1.0/users/register',
+      'user/register',
       action.payload,
-      { 'Content-Type': 'application/x-www-form-urlencoded' },
+      { 'Content-Type': 'application/json' },
     ).pipe(
-      map(({ response }) => (
+      map(() => (
         setMessage({
-          message: response.message,
+          message: 'Registration successful',
           error: false,
         })
       )),
       catchError(({ response }) => (
         of(setMessage({
-          message: response.message,
+          message: 'Something went wrong',
           error: true,
         }))
       )),
@@ -213,10 +218,10 @@ export const removeAccEpic = (action$, store$, { ajax }) => (
 );
 
 export const UserEpics = combineEpics(
-  // authEpic,
+  authEpic,
   // userDataEpic,
-  // logoutEpic,
-  // regEpic,
+  logoutEpic,
+  regEpic,
   // resEpic,
   // changePassEpic,
   // changeUserEpic,

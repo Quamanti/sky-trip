@@ -29,15 +29,15 @@ const LoginFormPure = ({ classes, authenticate, resetMessage }) => {
       {({ handleSubmit, values, submitting }) => (
         <form className={classes.form} onSubmit={handleSubmit}>
           <LoginMessage />
-          <Field name="login_email">
+          <Field name="username">
             {props => (
               <TextField
                 variant="outlined"
                 margin="normal"
                 fullWidth
-                id="email"
+                id="username"
                 label="Username"
-                autoComplete="email"
+                autoComplete="username"
                 name={props.input.name}
                 value={props.input.value}
                 onChange={props.input.onChange}
@@ -60,7 +60,7 @@ const LoginFormPure = ({ classes, authenticate, resetMessage }) => {
               />
             )}
           </Field>
-          <Field name="remember" type="checkbox" initialValue={false}>
+          {/* <Field name="remember" type="checkbox" initialValue={false}>
             {props => (
               <FormControlLabel
                 control={(
@@ -74,14 +74,14 @@ const LoginFormPure = ({ classes, authenticate, resetMessage }) => {
                 label="Remember me"
               />
             )}
-          </Field>
+          </Field> */}
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
-            disabled={!values.login_email || !values.password || submitting}
+            disabled={!values.username || !values.password || submitting}
           >
             Sign In
           </Button>
