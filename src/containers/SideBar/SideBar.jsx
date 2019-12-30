@@ -1,9 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Drawer, Divider, makeStyles, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import InboxIcon from '@material-ui/icons/Inbox';
+import { useParams } from 'react-router-dom';
+import { find } from 'lodash';
+import {
+  Drawer,
+  Divider,
+  makeStyles,
+} from '@material-ui/core';
 
-import { isSideBarOpen } from '../../store/_selectors/application.selectors';
+import { Details } from '../Details';
 
 export const SIDE_BAR_WIDTH = 320;
 
@@ -24,38 +29,27 @@ const useStyles = makeStyles(theme => ({
   toolbar: theme.mixins.toolbar,
 }));
 
-const SideBarPure = ({ open }) => {
+const SideBarPure = () => {
   const classes = useStyles();
-
+  const id = Number(useParams().id);
   return (
     <Drawer
       className={classes.drawer}
       variant="persistent"
       anchor="left"
-      open={open}
+      open={!!id}
       classes={{
         paper: classes.drawerPaper,
       }}
     >
       <div className={classes.toolbar} />
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text) => (
-          <ListItem button key={text}>
-            <ListItemIcon><InboxIcon /></ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
+      {Number.isNaN(id) ? null : <Details id={id} />}
       <Divider />
     </Drawer>
   );
 };
 
-const mapStateToProps = (store) => ({
-  open: isSideBarOpen(store),
-});
-
 export const SideBar = connect(
-  mapStateToProps,
+  null,
   null,
 )(SideBarPure);

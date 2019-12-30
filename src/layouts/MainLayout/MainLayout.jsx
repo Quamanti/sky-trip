@@ -1,10 +1,9 @@
 import React from 'react';
 import { CssBaseline, makeStyles } from '@material-ui/core';
 
+import { Content } from '../../components/Content';
 import { TopBar } from '../../containers/TopBar';
-import { SideBar } from '../../containers/SideBar/SideBar';
-import { Content } from '../../containers/Content/Content';
-import { Message } from '../../containers/Message/Message';
+import { Message } from '../../containers/Message';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -19,7 +18,6 @@ export const MainLayout = ({ children }) => {
     <div className={classes.root}>
       <CssBaseline />
       <TopBar />
-      <SideBar />
       <Content>
         {children}
       </Content>

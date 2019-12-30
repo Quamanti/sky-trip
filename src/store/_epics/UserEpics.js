@@ -28,7 +28,7 @@ export const authEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(AUTHENTICATE),
     mergeMap(action => ajax.post(
-      'login/',
+      '/login/',
       action.payload,
       { 'Content-Type': 'application/json' },
     ).pipe(
@@ -75,7 +75,7 @@ export const logoutEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(LOGOUT),
     mergeMap(() => ajax.post(
-      'logout/',
+      '/logout/',
       {},
       { 'X-CSRFToken': getCookies().csrftoken },
     ).pipe(
