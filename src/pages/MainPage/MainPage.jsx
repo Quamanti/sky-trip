@@ -1,8 +1,12 @@
 import React from 'react';
 import { Map } from '../../containers/Map';
+import { SideBar } from '../../containers/SideBar';
 
 export const MainPage = () => {
   return (
-    <Map />
+    <>
+      <SideBar />
+      <Map />
+    </>
   );
 };

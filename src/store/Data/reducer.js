@@ -3,7 +3,22 @@ import {
 } from './actions';
 
 const initialState = ({
-  locations: [],
+  locations: [
+    {
+      id: 1,
+      title: 'Aa',
+      description: 'Dlugie aaa',
+      longitude: 50.28862,
+      latitude: 18.677442,
+    },
+    {
+      id: 2,
+      title: 'Bb',
+      description: 'Dlugie bbb',
+      longitude: 50.284,
+      latitude: 18.674,
+    },
+  ],
 });
 
 export const reducer = (state = initialState, action) => {

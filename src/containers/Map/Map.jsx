@@ -10,26 +10,10 @@ import {
   Tooltip,
 } from 'react-leaflet';
 
-import { getLocations as getLocs } from '../../store/Data/actions';
+import { fetchLocations as fetchLocs } from '../../store/Data/actions';
+import { getLocations } from '../../store/_selectors/data.selectors';
 
-const locations = [
-  {
-    id: 1,
-    title: 'Aa',
-    description: 'Dlugie aaa',
-    longitude: 50.28862,
-    latitude: 18.677442,
-  },
-  {
-    id: 2,
-    title: 'Bb',
-    description: 'Dlugie bbb',
-    longitude: 50.284,
-    latitude: 18.674,
-  },
-];
-
-const MapPure = ({ getLocations }) => {
+const MapPure = ({ fetchLocations, locations }) => {
   const [mapHeight, changeMapHeight] = useState(window.innerHeight - 64);
   const [newPoint, setNewPoint] = useState(null);
   const history = useHistory();
@@ -42,11 +26,12 @@ const MapPure = ({ getLocations }) => {
   }, []);
 
   useEffect(() => {
-    getLocations();
-  }, [getLocations]);
+    fetchLocations();
+  }, [fetchLocations]);
 
-  const handleMapClick = e => {
-    setNewPoint(e.latlng);
+  const handleMapClick = (e) => {
+    // setNewPoint(e.latlng);
+    history.push('/locations');
   };
 
   const handleMarkerClick = (data) => {
@@ -88,11 +73,15 @@ const MapPure = ({ getLocations }) => {
   );
 };
 
+const mapStateToProps = (store) => ({
+  locations: getLocations(store),
+});
+
 const mapDispatchToProps = ({
-  getLocations: getLocs,
+  fetchLocations: fetchLocs,
 });
 
 export const Map = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(MapPure);

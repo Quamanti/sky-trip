@@ -1,7 +1,7 @@
 export const GET_LOCATIONS = 'GET_LOCATIONS';
 export const GET_LOCATIONS_SUCCESS = 'GET_LOCATIONS_SUCCESS';
 
-export const getLocations = () => ({
+export const fetchLocations = () => ({
   type: GET_LOCATIONS,
 });
 

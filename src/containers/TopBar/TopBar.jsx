@@ -14,7 +14,6 @@ import {
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import { logout as logoff } from '../../store/Users';
-import { isSideBarOpen } from '../../store/_selectors/application.selectors';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -93,15 +92,11 @@ export const TopBarPure = ({ logout, history }) => {
   );
 };
 
-const mapStateToProps = (store) => ({
-  open: isSideBarOpen(store),
-});
-
 const mapDispatchToProps = ({
   logout: logoff,
 });
 
 export const TopBar = connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps,
 )(withRouter(TopBarPure));

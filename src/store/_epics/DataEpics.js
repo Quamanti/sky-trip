@@ -16,14 +16,12 @@ export const getLocationsEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(GET_LOCATIONS),
     mergeMap(() => ajax.get(
-      '/',
+      '/user/locations/',
     ).pipe(
-      map(({ response }) => getLocationsSuccess({
-        locations: response, // TODO
-      })),
-      catchError(({ response }) => (
+      map(({ response }) => getLocationsSuccess(response)),
+      catchError(({ status }) => (
         of(setMessage({
-          message: response.message,
+          message: status,
           error: true,
         }))
       )),

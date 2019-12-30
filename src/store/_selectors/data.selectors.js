@@ -1,3 +1,3 @@
-export const getNotes = (store) => (
-  store.Data.notes
+export const getLocations = (store) => (
+  store.Data.locations
 );
