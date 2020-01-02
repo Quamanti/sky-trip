@@ -1,24 +1,11 @@
 import {
   GET_LOCATIONS_SUCCESS,
+  SET_NEW_POINT,
 } from './actions';
 
 const initialState = ({
-  locations: [
-    {
-      id: 1,
-      title: 'Aa',
-      description: 'Dlugie aaa',
-      longitude: 50.28862,
-      latitude: 18.677442,
-    },
-    {
-      id: 2,
-      title: 'Bb',
-      description: 'Dlugie bbb',
-      longitude: 50.284,
-      latitude: 18.674,
-    },
-  ],
+  locations: [],
+  newPoint: null,
 });
 
 export const reducer = (state = initialState, action) => {
@@ -27,6 +14,11 @@ export const reducer = (state = initialState, action) => {
       return ({
         ...state,
         locations: action.payload,
+      });
+    case SET_NEW_POINT:
+      return ({
+        ...state,
+        newPoint: action.payload,
       });
     default:
       return state;

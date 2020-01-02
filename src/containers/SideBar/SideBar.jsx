@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { find } from 'lodash';
 import {
   Drawer,
   Divider,
@@ -9,6 +8,9 @@ import {
 } from '@material-ui/core';
 
 import { Details } from '../Details';
+import { EditDetails } from '../EditDetails';
+
+import { getEditDetails } from '../../store/_selectors/application.selectors';
 
 export const SIDE_BAR_WIDTH = 320;
 
@@ -29,9 +31,21 @@ const useStyles = makeStyles(theme => ({
   toolbar: theme.mixins.toolbar,
 }));
 
-const SideBarPure = () => {
+const SideBarPure = ({ editDetails }) => {
   const classes = useStyles();
-  const id = Number(useParams().id);
+  const { id } = useParams();
+
+  const renderDrawerContent = () => {
+    if (id === 'new') {
+      return <EditDetails />;
+    }
+
+    if (!Number.isNaN(id)) {
+      return editDetails ? <EditDetails id={Number(id)} /> : <Details id={Number(id)} />;
+    }
+    return undefined;
+  };
+
   return (
     <Drawer
       className={classes.drawer}
@@ -43,13 +57,16 @@ const SideBarPure = () => {
       }}
     >
       <div className={classes.toolbar} />
-      {Number.isNaN(id) ? null : <Details id={id} />}
+      {renderDrawerContent()}
       <Divider />
     </Drawer>
   );
 };
 
+const mapStateToProps = (store) => ({
+  editDetails: getEditDetails(store),
+});
+
 export const SideBar = connect(
-  null,
-  null,
+  mapStateToProps,
 )(SideBarPure);

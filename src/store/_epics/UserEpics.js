@@ -37,9 +37,9 @@ export const authEpic = (action$, store$, { ajax }) => (
         resetMessage(),
       )),
       endWith(push('/')),
-      catchError(({ response }) => (
+      catchError(() => (
         of(setMessage({
-          message: response.message,
+          message: 'Whatever',
           error: true,
         }))
       )),
@@ -102,12 +102,19 @@ export const regEpic = (action$, store$, { ajax }) => (
           error: false,
         })
       )),
-      catchError(({ response }) => (
-        of(setMessage({
+      endWith('/login'),
+      catchError(({ status }) => {
+        if (status === 404) {
+          return of(setMessage({
+            message: 'Incorrect data were provided',
+            error: true,
+          }));
+        }
+        return of(setMessage({
           message: 'Something went wrong',
           error: true,
-        }))
-      )),
+        }));
+      }),
     )),
   )
 );

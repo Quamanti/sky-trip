@@ -1,22 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import {
   Map as LeafletMap,
   TileLayer,
-  Marker,
-  Popup,
   ZoomControl,
-  Tooltip,
 } from 'react-leaflet';
 
-import { fetchLocations as fetchLocs } from '../../store/Data/actions';
-import { getLocations } from '../../store/_selectors/data.selectors';
+import { Marker } from '../../components/Marker';
+import { NewMarker } from '../../components/NewMarker/NewMarker';
+import { fetchLocations as fetchLocs, setNewPoint as setNewPoi } from '../../store/Data/actions';
+import { getLocations, getNewPoint } from '../../store/_selectors/data.selectors';
+import { setEditDetails as setEditDets } from '../../store/Application';
+import { getEditDetails } from '../../store/_selectors/application.selectors';
 
-const MapPure = ({ fetchLocations, locations }) => {
+
+const MapPure = ({
+  fetchLocations,
+  locations,
+  setNewPoint,
+  newPoint,
+  setEditDetails,
+  editDetails,
+}) => {
   const [mapHeight, changeMapHeight] = useState(window.innerHeight - 64);
-  const [newPoint, setNewPoint] = useState(null);
   const history = useHistory();
+  const { id: idParam } = useParams();
 
   useEffect(() => {
     const resize = () => changeMapHeight(window.innerHeight - 64);
@@ -30,12 +39,24 @@ const MapPure = ({ fetchLocations, locations }) => {
   }, [fetchLocations]);
 
   const handleMapClick = (e) => {
-    // setNewPoint(e.latlng);
-    history.push('/locations');
+    if (idParam) {
+      history.push('/locations');
+      if (editDetails) {
+        setEditDetails(false);
+      }
+    } else {
+      setNewPoint(e.latlng);
+      history.push('/locations/new');
+    }
   };
 
   const handleMarkerClick = (data) => {
     history.push(`/locations/${data.target.options.id}`);
+  };
+
+  const handleNewMarkerClick = () => {
+    setNewPoint(null);
+    history.push('/locations');
   };
 
   return (
@@ -52,22 +73,16 @@ const MapPure = ({ fetchLocations, locations }) => {
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {locations.map((location) => {
-        return (
-          <Marker
-            key={location.id}
-            id={location.id}
-            position={[location.longitude, location.latitude]}
-            onClick={handleMarkerClick}
-          >
-            <Tooltip direction="top">
-              {location.title}
-            </Tooltip>
-          </Marker>
-        );
-      })}
+      {locations.map((location) => (
+        <Marker
+          key={location.id}
+          location={location}
+          onClick={handleMarkerClick}
+          active={Number(idParam) === location.id}
+        />
+      ))}
 
-      {newPoint && <Marker position={newPoint} onClick={() => setNewPoint(null)}></Marker>}
+      {newPoint && idParam === 'new' && <NewMarker position={newPoint} onClick={handleNewMarkerClick} />}
       <ZoomControl position="bottomright" />
     </LeafletMap>
   );
@@ -75,10 +90,14 @@ const MapPure = ({ fetchLocations, locations }) => {
 
 const mapStateToProps = (store) => ({
   locations: getLocations(store),
+  newPoint: getNewPoint(store),
+  editDetails: getEditDetails(store),
 });
 
 const mapDispatchToProps = ({
   fetchLocations: fetchLocs,
+  setNewPoint: setNewPoi,
+  setEditDetails: setEditDets,
 });
 
 export const Map = connect(

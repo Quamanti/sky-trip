@@ -1,11 +1,13 @@
 import {
   SET_MESSAGE,
   RESET_MESSAGE,
+  EDIT_DETAILS,
 } from './actions';
 
 const initialState = ({
   message: '',
   error: false,
+  editDetails: false,
 });
 
 export const reducer = (state = initialState, action) => {
@@ -21,6 +23,11 @@ export const reducer = (state = initialState, action) => {
         ...state,
         message: '',
         error: false,
+      });
+    case EDIT_DETAILS:
+      return ({
+        ...state,
+        editDetails: action.payload,
       });
     default:
       return state;

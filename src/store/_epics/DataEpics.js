@@ -1,16 +1,21 @@
 import { mergeMap, map, catchError } from 'rxjs/operators';
 import { ofType, combineEpics } from 'redux-observable';
 import { of } from 'rxjs';
+import { push } from 'connected-react-router';
 
+import { logout } from '../Users/actions';
 import {
-
-} from '../Users/actions';
-import {
+  setNewPoint,
+  fetchLocations,
   GET_LOCATIONS,
   getLocationsSuccess,
+  POST_LOCATION,
+  PUT_LOCATION,
+  REMOVE_LOCATION,
 } from '../Data/actions';
 
-import { setMessage } from '../Application';
+import { setMessage, setEditDetails } from '../Application';
+import { getCookies } from '../../utils/getCookies';
 
 export const getLocationsEpic = (action$, store$, { ajax }) => (
   action$.pipe(
@@ -20,10 +25,109 @@ export const getLocationsEpic = (action$, store$, { ajax }) => (
     ).pipe(
       map(({ response }) => getLocationsSuccess(response)),
       catchError(({ status }) => (
-        of(setMessage({
-          message: status,
-          error: true,
-        }))
+        of(
+          status === 403 ? logout() : undefined,
+          setMessage({
+            message: status,
+            error: true,
+          }),
+        )
+      )),
+    )),
+  )
+);
+
+export const postLocationEpic = (action$, store$, { ajax }) => (
+  action$.pipe(
+    ofType(POST_LOCATION),
+    mergeMap(({ payload }) => ajax.post(
+      '/user/locations/',
+      payload,
+      {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookies().csrftoken,
+      },
+    ).pipe(
+      mergeMap(({ response }) => of(
+        setMessage({
+          message: 'Location has been added',
+          error: false,
+        }),
+        fetchLocations(),
+        setNewPoint(null),
+        setEditDetails(false),
+        push(`/locations/${response.id}`),
+      )),
+      catchError(({ status }) => (
+        of(
+          status === 403 ? logout() : undefined,
+          setMessage({
+            message: status,
+            error: true,
+          }),
+        )
+      )),
+    )),
+  )
+);
+
+export const putLocationEpic = (action$, store$, { ajax }) => (
+  action$.pipe(
+    ofType(PUT_LOCATION),
+    mergeMap(({ payload }) => ajax.put(
+      `/user/locations/${payload.id}/`,
+      payload,
+      {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookies().csrftoken,
+      },
+    ).pipe(
+      mergeMap(() => of(
+        setMessage({
+          message: 'Location has been updated',
+          error: false,
+        }),
+        fetchLocations(),
+        setEditDetails(false),
+      )),
+      catchError(({ status }) => (
+        of(
+          status === 403 ? logout() : undefined,
+          setMessage({
+            message: status,
+            error: true,
+          }),
+        )
+      )),
+    )),
+  )
+);
+
+export const removeLocationEpic = (action$, store$, { ajax }) => (
+  action$.pipe(
+    ofType(REMOVE_LOCATION),
+    mergeMap(({ payload }) => ajax.remove(
+      `/user/locations/${payload.id}/`,
+      payload,
+      {
+        'X-CSRFToken': getCookies().csrftoken,
+      },
+    ).pipe(
+      mergeMap(() => of(
+        setMessage({
+          message: 'Location has been removed',
+          error: false,
+        }),
+        fetchLocations(),
+      )),
+      catchError(({ status }) => (
+        of(
+          status === 403 ? logout() : undefined,
+          setMessage({
+            message: status,
+            error: true,
+          }),
+        )
       )),
     )),
   )
@@ -31,4 +135,6 @@ export const getLocationsEpic = (action$, store$, { ajax }) => (
 
 export const DataEpics = combineEpics(
   getLocationsEpic,
+  postLocationEpic,
+  putLocationEpic,
 );
