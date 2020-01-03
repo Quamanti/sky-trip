@@ -17,6 +17,32 @@ import {
 import { setMessage, setEditDetails } from '../Application';
 import { getCookies } from '../../utils/getCookies';
 
+const handleError = ({ status }) => {
+  if (status === 400) {
+    return of(
+      setMessage({
+        message: 'Invalid data provided',
+        error: true,
+      }),
+    );
+  }
+  if (status === 403) {
+    return of(
+      logout(),
+      setMessage({
+        message: 'Authentication failure',
+        error: true,
+      }),
+    );
+  }
+  return of(
+    setMessage({
+      message: 'Something went wrong',
+      error: true,
+    }),
+  );
+};
+
 export const getLocationsEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(GET_LOCATIONS),
@@ -24,15 +50,7 @@ export const getLocationsEpic = (action$, store$, { ajax }) => (
       '/user/locations/',
     ).pipe(
       map(({ response }) => getLocationsSuccess(response)),
-      catchError(({ status }) => (
-        of(
-          status === 403 ? logout() : undefined,
-          setMessage({
-            message: status,
-            error: true,
-          }),
-        )
-      )),
+      catchError(handleError),
     )),
   )
 );
@@ -58,15 +76,7 @@ export const postLocationEpic = (action$, store$, { ajax }) => (
         setEditDetails(false),
         push(`/locations/${response.id}`),
       )),
-      catchError(({ status }) => (
-        of(
-          status === 403 ? logout() : undefined,
-          setMessage({
-            message: status,
-            error: true,
-          }),
-        )
-      )),
+      catchError(handleError),
     )),
   )
 );
@@ -90,15 +100,7 @@ export const patchLocationEpic = (action$, store$, { ajax }) => (
         fetchLocations(),
         setEditDetails(false),
       )),
-      catchError(({ status }) => (
-        of(
-          status === 403 ? logout() : undefined,
-          setMessage({
-            message: status,
-            error: true,
-          }),
-        )
-      )),
+      catchError(handleError),
     )),
   )
 );
@@ -120,15 +122,7 @@ export const deleteLocationEpic = (action$, store$, { ajax }) => (
         fetchLocations(),
         push('/locations'),
       )),
-      catchError(({ status }) => (
-        of(
-          status === 403 ? logout() : undefined,
-          setMessage({
-            message: status,
-            error: true,
-          }),
-        )
-      )),
+      catchError(handleError),
     )),
   )
 );

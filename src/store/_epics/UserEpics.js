@@ -16,6 +16,7 @@ import {
   CHANGE_PASSWORD,
   CHANGE_USERNAME,
   REMOVE_ACCOUNT,
+  logout,
 } from '../Users/actions';
 import {
   setMessage,
@@ -23,6 +24,40 @@ import {
 } from '../Application/actions';
 
 import { getCookies, deleteCookie } from '../../utils/getCookies';
+
+const handleError = ({ status }) => {
+  if (status === 400) {
+    return of(
+      setMessage({
+        message: 'Invalid data provided',
+        error: true,
+      }),
+    );
+  }
+  if (status === 403) {
+    return of(
+      logout(),
+      setMessage({
+        message: 'Authentication failure',
+        error: true,
+      }),
+    );
+  }
+  if (status === 404) {
+    return of(
+      setMessage({
+        message: 'Invalid username or password',
+        error: true,
+      }),
+    );
+  }
+  return of(
+    setMessage({
+      message: 'Something went wrong',
+      error: true,
+    }),
+  );
+};
 
 export const authEpic = (action$, store$, { ajax }) => (
   action$.pipe(
@@ -37,12 +72,7 @@ export const authEpic = (action$, store$, { ajax }) => (
         resetMessage(),
       )),
       endWith(push('/')),
-      catchError(() => (
-        of(setMessage({
-          message: 'Whatever',
-          error: true,
-        }))
-      )),
+      catchError(handleError),
     )),
   )
 );
