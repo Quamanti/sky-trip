@@ -81,7 +81,7 @@ const EditDetailsPure = ({
                 />
               )}
             </Field>
-            <Field name="description">
+            <Field name="description" initialValue="" parse={v => v}>
               {props => (
                 <TextField
                   multiline
