@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { find } from 'lodash';
+import { useHistory } from 'react-router';
 import {
   Typography,
   makeStyles,
@@ -12,7 +14,8 @@ import {
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import { find } from 'lodash';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+
 
 import { getLocations } from '../../store/_selectors/data.selectors';
 import { setEditDetails as setEditDets } from '../../store/Application';
@@ -33,6 +36,7 @@ const useStyles = makeStyles(theme => ({
 
 const DetailsPure = ({ id, locations, setEditDetails, deleteLocation }) => {
   const classes = useStyles();
+  const history = useHistory();
   const [dialog, setDialog] = useState(false);
 
   const data = find(locations, { id }) || {};
@@ -53,6 +57,10 @@ const DetailsPure = ({ id, locations, setEditDetails, deleteLocation }) => {
     deleteLocation(id);
   };
 
+  const handleDrawerClose = () => {
+    history.push('/locations');
+  };
+
   const renderDialog = (
     <Dialog
       open={dialog}
@@ -63,7 +71,7 @@ const DetailsPure = ({ id, locations, setEditDetails, deleteLocation }) => {
       <DialogTitle id="alert-dialog-title">Are you sure to delete location?</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          This action will delete location data with all attached photos. 
+          This action will delete location data with all attached photos.
           Deleted locations cannot be recovered.
         </DialogContentText>
       </DialogContent>
@@ -89,6 +97,14 @@ const DetailsPure = ({ id, locations, setEditDetails, deleteLocation }) => {
         </Typography>
       </div>
       <div className={classes.actionsContainer}>
+        <Button
+          color="primary"
+          className={classes.button}
+          startIcon={<ChevronLeftIcon />}
+          onClick={handleDrawerClose}
+        >
+          Hide
+        </Button>
         <Button
           variant="outlined"
           color="primary"

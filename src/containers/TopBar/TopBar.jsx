@@ -113,7 +113,7 @@ export const TopBarPure = ({ logout, history }) => {
 
   return (
     <>
-      <AppBar position="absolute" className={classes.appBar}>
+      <AppBar variant="elevation" position="absolute" className={classes.appBar}>
         <Toolbar>
           <ExploreIcon className={classes.icon} />
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>

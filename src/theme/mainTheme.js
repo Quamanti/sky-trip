@@ -14,8 +14,9 @@ const theme = createMuiTheme({
     },
     MuiButton: {
       textPrimary: {
-        color: '#5F4036',
+        color: '#846C5B',
         '&:hover': {
+          color: '#5F4036',
           backgroundColor: 'rgba(#5F4036, .08)',
         },
       },
@@ -39,6 +40,13 @@ const theme = createMuiTheme({
       underline: {
         '&::after': {
           borderBottom: '2px solid #5F4036',
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      root: {
+        '&$focused $notchedOutline': {
+          borderColor: '#846C5B',
         },
       },
     },

@@ -42,7 +42,7 @@ export const AccountPage = () => {
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Paper className={classes.paper}>
-        <Link to="/">
+        <Link to="/locations">
           &larr; Back to main page
         </Link>
         <UserData />

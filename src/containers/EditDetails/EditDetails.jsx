@@ -1,5 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { find } from 'lodash';
+import { Form, Field } from 'react-final-form';
+import { useHistory } from 'react-router-dom';
 import {
   makeStyles,
   TextField,
@@ -7,9 +10,6 @@ import {
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
-import { find } from 'lodash';
-import { Form, Field } from 'react-final-form';
-import { useHistory } from 'react-router';
 
 import { getLocations, getNewPoint } from '../../store/_selectors/data.selectors';
 import { postLocation as postLoc, patchLocation as patchLoc } from '../../store/Data';

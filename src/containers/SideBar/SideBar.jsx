@@ -20,6 +20,9 @@ const useStyles = makeStyles(theme => ({
   },
   drawerPaper: {
     width: SIDE_BAR_WIDTH,
+    [`${theme.breakpoints.down('xs')}`]: {
+      width: '100vw',
+    },
   },
   drawerHeader: {
     display: 'flex',
