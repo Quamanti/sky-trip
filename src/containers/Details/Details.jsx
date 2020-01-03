@@ -11,7 +11,7 @@ import { find } from 'lodash';
 
 import { getLocations } from '../../store/_selectors/data.selectors';
 import { setEditDetails as setEditDets } from '../../store/Application';
-import { removeLocation as removeLoc } from '../../store/Data';
+import { deleteLocation as deleteLoc } from '../../store/Data';
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const DetailsPure = ({ id, locations, setEditDetails, removeLocation }) => {
+const DetailsPure = ({ id, locations, setEditDetails, deleteLocation }) => {
   const classes = useStyles();
   const data = find(locations, { id }) || {};
 
@@ -31,7 +31,7 @@ const DetailsPure = ({ id, locations, setEditDetails, removeLocation }) => {
   };
 
   const handleRemoveClick = () => {
-    removeLocation(id);
+    deleteLocation(id);
   };
 
   return (
@@ -43,7 +43,7 @@ const DetailsPure = ({ id, locations, setEditDetails, removeLocation }) => {
         {data.description}
       </Typography>
       <Button
-        variant="contained"
+        variant="outlined"
         color="secondary"
         className={classes.button}
         startIcon={<DeleteIcon />}
@@ -52,7 +52,7 @@ const DetailsPure = ({ id, locations, setEditDetails, removeLocation }) => {
         Delete
       </Button>
       <Button
-        variant="contained"
+        variant="outlined"
         color="primary"
         className={classes.button}
         startIcon={<EditIcon />}
@@ -70,7 +70,7 @@ const mapStateToProps = (store) => ({
 
 const mapDispatchToProps = ({
   setEditDetails: setEditDets,
-  removeLocation: removeLoc,
+  deleteLocation: deleteLoc,
 });
 
 export const Details = connect(

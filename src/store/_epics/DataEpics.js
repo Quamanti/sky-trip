@@ -10,8 +10,8 @@ import {
   GET_LOCATIONS,
   getLocationsSuccess,
   POST_LOCATION,
-  PUT_LOCATION,
-  REMOVE_LOCATION,
+  PATCHT_LOCATION,
+  DELETE_LOCATION,
 } from '../Data/actions';
 
 import { setMessage, setEditDetails } from '../Application';
@@ -71,10 +71,10 @@ export const postLocationEpic = (action$, store$, { ajax }) => (
   )
 );
 
-export const putLocationEpic = (action$, store$, { ajax }) => (
+export const patchLocationEpic = (action$, store$, { ajax }) => (
   action$.pipe(
-    ofType(PUT_LOCATION),
-    mergeMap(({ payload }) => ajax.put(
+    ofType(PATCHT_LOCATION),
+    mergeMap(({ payload }) => ajax.patch(
       `/user/locations/${payload.id}/`,
       payload,
       {
@@ -103,12 +103,11 @@ export const putLocationEpic = (action$, store$, { ajax }) => (
   )
 );
 
-export const removeLocationEpic = (action$, store$, { ajax }) => (
+export const deleteLocationEpic = (action$, store$, { ajax }) => (
   action$.pipe(
-    ofType(REMOVE_LOCATION),
-    mergeMap(({ payload }) => ajax.remove(
-      `/user/locations/${payload.id}/`,
-      payload,
+    ofType(DELETE_LOCATION),
+    mergeMap(({ payload }) => ajax.delete(
+      `/user/locations/${payload}/`,
       {
         'X-CSRFToken': getCookies().csrftoken,
       },
@@ -119,6 +118,7 @@ export const removeLocationEpic = (action$, store$, { ajax }) => (
           error: false,
         }),
         fetchLocations(),
+        push('/locations'),
       )),
       catchError(({ status }) => (
         of(
@@ -136,5 +136,6 @@ export const removeLocationEpic = (action$, store$, { ajax }) => (
 export const DataEpics = combineEpics(
   getLocationsEpic,
   postLocationEpic,
-  putLocationEpic,
+  patchLocationEpic,
+  deleteLocationEpic,
 );

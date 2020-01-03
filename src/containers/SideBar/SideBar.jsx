@@ -40,10 +40,11 @@ const SideBarPure = ({ editDetails }) => {
       return <EditDetails />;
     }
 
-    if (!Number.isNaN(id)) {
-      return editDetails ? <EditDetails id={Number(id)} /> : <Details id={Number(id)} />;
+    if (id === undefined) {
+      return undefined;
     }
-    return undefined;
+
+    return editDetails ? <EditDetails id={Number(id)} /> : <Details id={Number(id)} />;
   };
 
   return (

@@ -9,7 +9,7 @@ import { find } from 'lodash';
 import { Form, Field } from 'react-final-form';
 
 import { getLocations, getNewPoint } from '../../store/_selectors/data.selectors';
-import { postLocation as postLoc, putLocation as putLoc } from '../../store/Data';
+import { postLocation as postLoc, patchLocation as patchLoc } from '../../store/Data';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const EditDetailsPure = ({ id, locations, newPoint, postLocation, putLocation }) => {
+const EditDetailsPure = ({ id, locations, newPoint, postLocation, patchLocation }) => {
   const classes = useStyles();
   const data = find(locations, { id }) || {};
   const onSubmit = (formData) => {
@@ -28,7 +28,7 @@ const EditDetailsPure = ({ id, locations, newPoint, postLocation, putLocation })
         latitude: newPoint.lat,
       });
     } else {
-      putLocation({
+      patchLocation({
         ...formData,
         id,
         longitude: data.longitude,
@@ -96,7 +96,7 @@ const mapStateToProps = (store) => ({
 
 const mapDispatchToProps = ({
   postLocation: postLoc,
-  putLocation: putLoc,
+  patchLocation: patchLoc,
 });
 
 export const EditDetails = connect(

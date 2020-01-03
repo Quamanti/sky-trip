@@ -6,7 +6,7 @@ import {
 } from 'react-leaflet';
 
 const defaultIcon = new Icon({
-  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   tooltipAnchor: [0, -30],
