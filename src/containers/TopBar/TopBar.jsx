@@ -18,6 +18,7 @@ import {
 } from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import HelpOutline from '@material-ui/icons/HelpOutline';
+import ExploreIcon from '@material-ui/icons/Explore';
 
 import { logout as logoff } from '../../store/Users';
 
@@ -31,6 +32,10 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1,
+  },
+  icon: {
+    marginRight: theme.spacing(2),
+    color: '#846C5B',
   },
 }));
 
@@ -92,10 +97,10 @@ export const TopBarPure = ({ logout, history }) => {
       <DialogTitle id="alert-dialog-title">How to use</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          To add a location, click on chosen position on the map. Type a title and (optionally) a description then press SAVE button.
+          To add a location, click on chosen position on the map. Enter a title and (optionally) description then press SAVE.
         </DialogContentText>
         <DialogContentText id="alert-dialog-description">
-          To see details of the location, simply click on its marker. You can edit the details by pressing EDIT button, or delte the marker by pressing DELETE button.
+          To view location details, simply click on its marker. You can edit the details by pressing EDIT or you can delte the marker by pressing DELETE.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -110,6 +115,7 @@ export const TopBarPure = ({ logout, history }) => {
     <>
       <AppBar position="absolute" className={classes.appBar}>
         <Toolbar>
+          <ExploreIcon className={classes.icon} />
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             SKY TRIP
           </Typography>
