@@ -77,6 +77,7 @@ const EditDetailsPure = ({
                   name={props.input.name}
                   value={props.input.value}
                   onChange={props.input.onChange}
+                  required
                 />
               )}
             </Field>
