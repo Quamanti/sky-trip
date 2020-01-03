@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import {
   Typography,
   makeStyles,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -24,15 +29,49 @@ const useStyles = makeStyles(theme => ({
 
 const DetailsPure = ({ id, locations, setEditDetails, deleteLocation }) => {
   const classes = useStyles();
+  const [dialog, setDialog] = useState(false);
+
   const data = find(locations, { id }) || {};
 
   const handleEditClick = () => {
     setEditDetails(true);
   };
 
+  const handleDialogOpenClick = () => {
+    setDialog(true);
+  };
+
+  const handleDialogCloseClick = () => {
+    setDialog(false);
+  };
+
   const handleRemoveClick = () => {
     deleteLocation(id);
   };
+
+  const renderDialog = () => (
+    <Dialog
+      open={dialog}
+      onClose={handleDialogCloseClick}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">Are you sure to delete location?</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          This action will delete location data with all attached photos. Deleted locations cannot be recovered.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleDialogCloseClick} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={handleRemoveClick} color="secondary">
+          Confirm
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 
   return (
     <div className={classes.container}>
@@ -47,7 +86,7 @@ const DetailsPure = ({ id, locations, setEditDetails, deleteLocation }) => {
         color="secondary"
         className={classes.button}
         startIcon={<DeleteIcon />}
-        onClick={handleRemoveClick}
+        onClick={handleDialogOpenClick}
       >
         Delete
       </Button>
@@ -60,6 +99,7 @@ const DetailsPure = ({ id, locations, setEditDetails, deleteLocation }) => {
       >
         Edit
       </Button>
+      {renderDialog()}
     </div>
   );
 };

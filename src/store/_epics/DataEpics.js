@@ -114,7 +114,7 @@ export const deleteLocationEpic = (action$, store$, { ajax }) => (
     ).pipe(
       mergeMap(() => of(
         setMessage({
-          message: 'Location has been removed',
+          message: 'Location has been deleted',
           error: false,
         }),
         fetchLocations(),

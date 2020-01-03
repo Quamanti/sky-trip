@@ -13,8 +13,20 @@ const theme = createMuiTheme({
       },
     },
     MuiButton: {
-      sizeSmall: {
+      containedPrimary: {
         backgroundColor: '#846C5B',
+        '&:hover': {
+          backgroundColor: '#5F4036',
+        },
+      },
+      outlinedPrimary: {
+        color: '#846C5B',
+        borderColor: '#846C5B',
+        '&:hover': {
+          color: '#5F4036',
+          border: '1px solid #5F4036',
+          backgroundColor: 'rgba(#5F4036, .08)',
+        },
       },
     },
   },
