@@ -53,7 +53,7 @@ const DetailsPure = ({ id, locations, setEditDetails, deleteLocation }) => {
     deleteLocation(id);
   };
 
-  const renderDialog = () => (
+  const renderDialog = (
     <Dialog
       open={dialog}
       onClose={handleDialogCloseClick}
@@ -108,7 +108,7 @@ const DetailsPure = ({ id, locations, setEditDetails, deleteLocation }) => {
           Delete
         </Button>
       </div>
-      {renderDialog()}
+      {renderDialog}
     </div>
   );
 };

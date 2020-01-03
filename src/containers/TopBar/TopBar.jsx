@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import clsx from 'clsx';
 import { withRouter } from 'react-router-dom';
 import {
   makeStyles,
@@ -10,8 +9,15 @@ import {
   Typography,
   Menu,
   MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
 } from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import HelpOutline from '@material-ui/icons/HelpOutline';
 
 import { logout as logoff } from '../../store/Users';
 
@@ -32,6 +38,7 @@ export const TopBarPure = ({ logout, history }) => {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [dialog, setDialog] = React.useState(false);
   const isMenuOpen = Boolean(anchorEl);
 
   const handleProfileMenuOpen = event => {
@@ -52,6 +59,14 @@ export const TopBarPure = ({ logout, history }) => {
     setAnchorEl(null);
   };
 
+  const handleDialogOpenClick = () => {
+    setDialog(true);
+  };
+
+  const handleDialogCloseClick = () => {
+    setDialog(false);
+  };
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -67,14 +82,43 @@ export const TopBarPure = ({ logout, history }) => {
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
+  const renderInfo = (
+    <Dialog
+      open={dialog}
+      onClose={handleDialogCloseClick}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">How to use</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          To add a location, click on chosen position on the map. Type a title and (optionally) a description then press SAVE button.
+        </DialogContentText>
+        <DialogContentText id="alert-dialog-description">
+          To see details of the location, simply click on its marker. You can edit the details by pressing EDIT button, or delte the marker by pressing DELETE button.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleDialogCloseClick} color="primary">
+          Hide
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 
   return (
     <>
-      <AppBar position="absolute" className={clsx(classes.appBar)}>
+      <AppBar position="absolute" className={classes.appBar}>
         <Toolbar>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             SKY TRIP
           </Typography>
+          <IconButton
+            onClick={handleDialogOpenClick}
+            color="inherit"
+          >
+            <HelpOutline />
+          </IconButton>
           <IconButton
             edge="end"
             aria-label="account of current user"
@@ -88,6 +132,7 @@ export const TopBarPure = ({ logout, history }) => {
         </Toolbar>
       </AppBar>
       {renderMenu}
+      {renderInfo}
     </>
   );
 };

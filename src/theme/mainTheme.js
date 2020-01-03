@@ -13,6 +13,12 @@ const theme = createMuiTheme({
       },
     },
     MuiButton: {
+      textPrimary: {
+        color: '#5F4036',
+        '&:hover': {
+          backgroundColor: 'rgba(#5F4036, .08)',
+        },
+      },
       containedPrimary: {
         backgroundColor: '#846C5B',
         '&:hover': {
