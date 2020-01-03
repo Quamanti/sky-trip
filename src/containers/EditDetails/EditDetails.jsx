@@ -5,20 +5,37 @@ import {
   TextField,
   Button,
 } from '@material-ui/core';
+import SaveIcon from '@material-ui/icons/Save';
+import CancelIcon from '@material-ui/icons/Cancel';
 import { find } from 'lodash';
 import { Form, Field } from 'react-final-form';
+import { useHistory } from 'react-router';
 
 import { getLocations, getNewPoint } from '../../store/_selectors/data.selectors';
 import { postLocation as postLoc, patchLocation as patchLoc } from '../../store/Data';
+import { setEditDetails as setEditDets } from '../../store/Application';
+
 
 const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(1),
+  },
   container: {
     padding: theme.spacing(1),
   },
 }));
 
-const EditDetailsPure = ({ id, locations, newPoint, postLocation, patchLocation }) => {
+const EditDetailsPure = ({
+  id,
+  locations,
+  newPoint,
+  postLocation,
+  patchLocation,
+  setEditDetails,
+}) => {
   const classes = useStyles();
+  const history = useHistory();
+
   const data = find(locations, { id }) || {};
   const onSubmit = (formData) => {
     if (id === undefined) {
@@ -31,10 +48,15 @@ const EditDetailsPure = ({ id, locations, newPoint, postLocation, patchLocation 
       patchLocation({
         ...formData,
         id,
-        longitude: data.longitude,
-        latitude: data.latitude,
       });
     }
+  };
+
+  const handleCancelClick = () => {
+    if (id === undefined) {
+      history.push('/locations');
+    }
+    setEditDetails(false);
   };
 
   return (
@@ -62,7 +84,7 @@ const EditDetailsPure = ({ id, locations, newPoint, postLocation, patchLocation 
               {props => (
                 <TextField
                   multiline
-                  variant="outlined"
+                  variant="standard"
                   margin="normal"
                   fullWidth
                   id="description"
@@ -74,10 +96,21 @@ const EditDetailsPure = ({ id, locations, newPoint, postLocation, patchLocation 
               )}
             </Field>
             <Button
+              type="button"
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              startIcon={<CancelIcon />}
+              onClick={handleCancelClick}
+            >
+              Cancel
+            </Button>
+            <Button
               type="submit"
               variant="contained"
               color="primary"
-              className={classes.submit}
+              className={classes.button}
+              startIcon={<SaveIcon />}
             >
               Save
             </Button>
@@ -95,6 +128,7 @@ const mapStateToProps = (store) => ({
 });
 
 const mapDispatchToProps = ({
+  setEditDetails: setEditDets,
   postLocation: postLoc,
   patchLocation: patchLoc,
 });

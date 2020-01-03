@@ -22,8 +22,12 @@ const useStyles = makeStyles(theme => ({
   button: {
     margin: theme.spacing(1),
   },
-  container: {
-    padding: theme.spacing(1),
+  dataContainer: {
+    padding: theme.spacing(2),
+  },
+  actionsContainer: {
+    marginTop: theme.spacing(1),
+    textAlign: 'right',
   },
 }));
 
@@ -59,7 +63,8 @@ const DetailsPure = ({ id, locations, setEditDetails, deleteLocation }) => {
       <DialogTitle id="alert-dialog-title">Are you sure to delete location?</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          This action will delete location data with all attached photos. Deleted locations cannot be recovered.
+          This action will delete location data with all attached photos. 
+          Deleted locations cannot be recovered.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -75,30 +80,34 @@ const DetailsPure = ({ id, locations, setEditDetails, deleteLocation }) => {
 
   return (
     <div className={classes.container}>
-      <Typography component="h1" variant="h6" color="primary" gutterBottom>
-        {data.title}
-      </Typography>
-      <Typography component="p" variant="body2" gutterBottom>
-        {data.description}
-      </Typography>
-      <Button
-        variant="outlined"
-        color="secondary"
-        className={classes.button}
-        startIcon={<DeleteIcon />}
-        onClick={handleDialogOpenClick}
-      >
-        Delete
-      </Button>
-      <Button
-        variant="outlined"
-        color="primary"
-        className={classes.button}
-        startIcon={<EditIcon />}
-        onClick={handleEditClick}
-      >
-        Edit
-      </Button>
+      <div className={classes.dataContainer}>
+        <Typography component="h1" variant="h6" color="primary" gutterBottom>
+          {data.title}
+        </Typography>
+        <Typography component="p" variant="body2" gutterBottom>
+          {data.description}
+        </Typography>
+      </div>
+      <div className={classes.actionsContainer}>
+        <Button
+          variant="outlined"
+          color="primary"
+          className={classes.button}
+          startIcon={<EditIcon />}
+          onClick={handleEditClick}
+        >
+          Edit
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          className={classes.button}
+          startIcon={<DeleteIcon />}
+          onClick={handleDialogOpenClick}
+        >
+          Delete
+        </Button>
+      </div>
       {renderDialog()}
     </div>
   );

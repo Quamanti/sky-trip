@@ -29,6 +29,20 @@ const theme = createMuiTheme({
         },
       },
     },
+    MuiInput: {
+      underline: {
+        '&::after': {
+          borderBottom: '2px solid #5F4036',
+        },
+      },
+    },
+    MuiFormLabel: {
+      root: {
+        '&$focused': {
+          color: '#5F4036',
+        },
+      },
+    },
   },
 });
 

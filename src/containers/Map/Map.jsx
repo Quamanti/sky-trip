@@ -68,6 +68,7 @@ const MapPure = ({
       center={[50.289, 18.677]}
       onClick={handleMapClick}
       zoomControl={false}
+      worldCopyJump
     >
       <TileLayer
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
