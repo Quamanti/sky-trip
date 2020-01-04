@@ -12,6 +12,8 @@ import {
   POST_LOCATION,
   PATCHT_LOCATION,
   DELETE_LOCATION,
+  GET_PHOTOS,
+  getPhotosSuccess,
 } from '../Data/actions';
 
 import { setMessage, setEditDetails } from '../Application';
@@ -127,9 +129,23 @@ export const deleteLocationEpic = (action$, store$, { ajax }) => (
   )
 );
 
+// TODO Remove
+export const getPhotoEpic = (action$, store$, { ajax }) => (
+  action$.pipe(
+    ofType(GET_PHOTOS),
+    mergeMap(({ payload }) => ajax.get(
+      `/user/locations/${payload}/photos`,
+    ).pipe(
+      map(({ response }) => getPhotosSuccess(response)),
+      catchError(handleError),
+    )),
+  )
+);
+
 export const DataEpics = combineEpics(
   getLocationsEpic,
   postLocationEpic,
   patchLocationEpic,
   deleteLocationEpic,
+  getPhotoEpic,
 );

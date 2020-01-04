@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import {
   Drawer,
-  Divider,
   makeStyles,
 } from '@material-ui/core';
 
@@ -12,7 +11,7 @@ import { EditDetails } from '../EditDetails';
 
 import { getEditDetails } from '../../store/_selectors/application.selectors';
 
-export const SIDE_BAR_WIDTH = 320;
+export const SIDE_BAR_WIDTH = 400;
 
 const useStyles = makeStyles(theme => ({
   drawer: {
@@ -62,7 +61,6 @@ const SideBarPure = ({ editDetails }) => {
     >
       <div className={classes.toolbar} />
       {renderDrawerContent()}
-      <Divider />
     </Drawer>
   );
 };
