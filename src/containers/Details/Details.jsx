@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { find } from 'lodash';
+import { find, isEmpty } from 'lodash';
 import { useHistory } from 'react-router';
 import {
   Typography,
@@ -53,6 +53,12 @@ const DetailsPure = ({
   const [dialog, setDialog] = useState(false);
 
   const data = find(locations, { id }) || {};
+
+  useEffect(() => {
+    if (isEmpty(data)) {
+      history.push('/locations');
+    }
+  }, [data, history]);
 
   const handleEditClick = () => {
     setEditDetails(true);

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { find } from 'lodash';
+import { find, isEmpty } from 'lodash';
 import { Form, Field } from 'react-final-form';
 import { useHistory } from 'react-router-dom';
 import {
@@ -40,6 +40,13 @@ const EditDetailsPure = ({
   const history = useHistory();
 
   const data = find(locations, { id }) || {};
+
+  useEffect(() => {
+    if (isEmpty(data) && isEmpty(newPoint)) {
+      history.push('/locations');
+    }
+  }, [data, newPoint, history]);
+
   const onSubmit = (formData) => {
     if (id === undefined) {
       postLocation({
