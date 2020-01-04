@@ -7,9 +7,12 @@ import {
   makeStyles,
   TextField,
   Button,
+  Divider,
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
+
+import { Dropzone } from '../../components/Dropzone';
 
 import { getLocations, getNewPoint } from '../../store/_selectors/data.selectors';
 import { postLocation as postLoc, patchLocation as patchLoc } from '../../store/Data';
@@ -45,8 +48,9 @@ const EditDetailsPure = ({
         latitude: newPoint.lat,
       });
     } else {
+      const { file, ...selectedData } = formData;
       patchLocation({
-        ...formData,
+        ...selectedData,
         id,
       });
     }
@@ -59,6 +63,64 @@ const EditDetailsPure = ({
     setEditDetails(false);
   };
 
+  const renderDetails = (
+    <>
+      <Field name="title">
+        {props => (
+          <TextField
+            variant="standard"
+            fullWidth
+            id="title"
+            label="Title"
+            name={props.input.name}
+            value={props.input.value}
+            onChange={props.input.onChange}
+            required
+          />
+        )}
+      </Field>
+      <Field name="description" initialValue="" parse={v => v}>
+        {props => (
+          <TextField
+            multiline
+            variant="standard"
+            margin="normal"
+            fullWidth
+            id="description"
+            label="Description"
+            name={props.input.name}
+            value={props.input.value}
+            onChange={props.input.onChange}
+          />
+        )}
+      </Field>
+    </>
+  );
+
+  const renderActions = (
+    <>
+      <Button
+        type="button"
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        startIcon={<CancelIcon />}
+        onClick={handleCancelClick}
+      >
+        Cancel
+      </Button>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        startIcon={<SaveIcon />}
+      >
+        Save
+      </Button>
+    </>
+  );
+
   return (
     <div className={classes.container}>
       <Form
@@ -67,54 +129,10 @@ const EditDetailsPure = ({
       >
         {({ handleSubmit }) => (
           <form className={classes.form} onSubmit={handleSubmit}>
-            <Field name="title">
-              {props => (
-                <TextField
-                  variant="standard"
-                  fullWidth
-                  id="title"
-                  label="Title"
-                  name={props.input.name}
-                  value={props.input.value}
-                  onChange={props.input.onChange}
-                  required
-                />
-              )}
-            </Field>
-            <Field name="description" initialValue="" parse={v => v}>
-              {props => (
-                <TextField
-                  multiline
-                  variant="standard"
-                  margin="normal"
-                  fullWidth
-                  id="description"
-                  label="Description"
-                  name={props.input.name}
-                  value={props.input.value}
-                  onChange={props.input.onChange}
-                />
-              )}
-            </Field>
-            <Button
-              type="button"
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              startIcon={<CancelIcon />}
-              onClick={handleCancelClick}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              startIcon={<SaveIcon />}
-            >
-              Save
-            </Button>
+            {renderDetails}
+            {renderActions}
+            <Divider />
+            <Field name="files" component={Dropzone} />
           </form>
         )}
       </Form>

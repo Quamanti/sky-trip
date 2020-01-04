@@ -4,11 +4,8 @@ export const GET_LOCATIONS_SUCCESS = 'GET_LOCATIONS_SUCCESS';
 export const POST_LOCATION = 'POST_LOCATION';
 export const PATCHT_LOCATION = 'PATCHT_LOCATION';
 export const DELETE_LOCATION = 'DELETE_LOCATION';
-
-// TODO: Remove
-export const GET_PHOTOS = 'GET_PHOTOS';
-export const GET_PHOTOS_SUCCESS = 'GET_PHOTOS_SUCCESS';
-export const CLEAR_PHOTOS = 'CLEAR_PHOTOS';
+export const POST_PHOTO = 'POST_PHOTO';
+export const DELETE_PHOTO = 'DELETE_PHOTO';
 
 export const setNewPoint = (payload) => ({
   type: SET_NEW_POINT,
@@ -39,18 +36,12 @@ export const deleteLocation = (payload) => ({
   payload,
 });
 
-// TODO: Remove
-export const fetchPhotos = (payload) => ({
-  type: GET_PHOTOS,
+export const postPhoto = (payload) => ({
+  type: POST_PHOTO,
   payload,
 });
 
-export const getPhotosSuccess = (payload) => ({
-  type: GET_PHOTOS_SUCCESS,
+export const deletePhoto = (payload) => ({
+  type: DELETE_PHOTO,
   payload,
-
-});
-
-export const clearPhotos = () => ({
-  type: CLEAR_PHOTOS,
 });

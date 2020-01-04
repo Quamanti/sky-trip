@@ -1,6 +1,6 @@
-import { mergeMap, map, catchError } from 'rxjs/operators';
+import { mergeMap, map, catchError, switchMap } from 'rxjs/operators';
 import { ofType, combineEpics } from 'redux-observable';
-import { of } from 'rxjs';
+import { of, forkJoin } from 'rxjs';
 import { push } from 'connected-react-router';
 
 import { logout } from '../Users/actions';
@@ -12,8 +12,8 @@ import {
   POST_LOCATION,
   PATCHT_LOCATION,
   DELETE_LOCATION,
-  GET_PHOTOS,
-  getPhotosSuccess,
+  POST_PHOTO,
+  DELETE_PHOTO,
 } from '../Data/actions';
 
 import { setMessage, setEditDetails } from '../Application';
@@ -60,26 +60,45 @@ export const getLocationsEpic = (action$, store$, { ajax }) => (
 export const postLocationEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(POST_LOCATION),
-    mergeMap(({ payload }) => ajax.post(
-      '/user/locations/',
-      payload,
-      {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': getCookies().csrftoken,
+    switchMap(
+      ({ payload: { files, ...location } }) => ajax.post(
+        '/user/locations/',
+        location,
+        {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookies().csrftoken,
+        },
+      ),
+      (action, response) => ([action, response]),
+    ),
+    mergeMap(
+      ([{ payload: { files } }, response]) => {
+        const responses = files && files.map(file => {
+          const data = new FormData();
+          data.append('location', response.response.id);
+          data.append('file', file);
+          return ajax.post(
+            '/photos/',
+            data,
+            {
+              'X-CSRFToken': getCookies().csrftoken,
+            },
+          );
+        });
+        return files ? forkJoin(...responses) : forkJoin(of(response));
       },
-    ).pipe(
-      mergeMap(({ response }) => of(
-        setMessage({
-          message: 'Location has been added',
-          error: false,
-        }),
-        fetchLocations(),
-        setNewPoint(null),
-        setEditDetails(false),
-        push(`/locations/${response.id}`),
-      )),
-      catchError(handleError),
+    ),
+    mergeMap(([{ response }]) => of(
+      setMessage({
+        message: 'Location has been added',
+        error: false,
+      }),
+      fetchLocations(),
+      setNewPoint(null),
+      setEditDetails(false),
+      push(`/locations/${response.location || response.id}`),
     )),
+    catchError(handleError),
   )
 );
 
@@ -129,14 +148,39 @@ export const deleteLocationEpic = (action$, store$, { ajax }) => (
   )
 );
 
-// TODO Remove
-export const getPhotoEpic = (action$, store$, { ajax }) => (
+export const postPhotoEpic = (action$, store$, { ajax }) => (
   action$.pipe(
-    ofType(GET_PHOTOS),
-    mergeMap(({ payload }) => ajax.get(
-      `/user/locations/${payload}/photos`,
+    ofType(POST_PHOTO),
+    mergeMap(({ payload }) => ajax.post(
+      '/photos/',
+      payload,
+      {
+        'Content-Type': 'multipart/form-data',
+        'X-CSRFToken': getCookies().csrftoken,
+      },
     ).pipe(
-      map(({ response }) => getPhotosSuccess(response)),
+      catchError((response) => ({ ...response, photoError: true })),
+    )),
+  )
+);
+
+export const deletePhotoEpic = (action$, store$, { ajax }) => (
+  action$.pipe(
+    ofType(DELETE_PHOTO),
+    mergeMap(({ payload }) => ajax.delete(
+      `/user/locations/${payload}/`,
+      {
+        'X-CSRFToken': getCookies().csrftoken,
+      },
+    ).pipe(
+      mergeMap(() => of(
+        setMessage({
+          message: 'Location has been deleted',
+          error: false,
+        }),
+        fetchLocations(),
+        push('/locations'),
+      )),
       catchError(handleError),
     )),
   )
@@ -147,5 +191,5 @@ export const DataEpics = combineEpics(
   postLocationEpic,
   patchLocationEpic,
   deleteLocationEpic,
-  getPhotoEpic,
+  postPhotoEpic,
 );

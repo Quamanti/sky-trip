@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { find } from 'lodash';
 import { useHistory } from 'react-router';
@@ -19,13 +19,9 @@ import EditIcon from '@material-ui/icons/Edit';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 
-import { getLocations, getPhotos } from '../../store/_selectors/data.selectors';
+import { getLocations } from '../../store/_selectors/data.selectors';
 import { setEditDetails as setEditDets } from '../../store/Application';
-import {
-  deleteLocation as deleteLoc,
-  fetchPhotos as FetchPhots,
-  clearPhotos as clearPhots,
-} from '../../store/Data';
+import { deleteLocation as deleteLoc } from '../../store/Data';
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -49,21 +45,12 @@ const useStyles = makeStyles(theme => ({
 const DetailsPure = ({
   id,
   locations,
-  photos,
   setEditDetails,
   deleteLocation,
-  fetchPhotos,
-  clearPhotos,
 }) => {
   const classes = useStyles();
   const history = useHistory();
   const [dialog, setDialog] = useState(false);
-
-  useEffect(() => {
-    fetchPhotos(id);
-
-    return () => clearPhotos();
-  }, [fetchPhotos, id, clearPhotos]);
 
   const data = find(locations, { id }) || {};
 
@@ -131,7 +118,7 @@ const DetailsPure = ({
 
   const renderImages = (
     <div className={classes.imagesContainer}>
-      {photos.map(photo => (
+      {data.photos && data.photos.map(photo => (
         <CardMedia
           key={photo.id}
           className={classes.cardMedia}
@@ -182,14 +169,11 @@ const DetailsPure = ({
 
 const mapStateToProps = (store) => ({
   locations: getLocations(store),
-  photos: getPhotos(store),
 });
 
 const mapDispatchToProps = ({
   setEditDetails: setEditDets,
   deleteLocation: deleteLoc,
-  fetchPhotos: FetchPhots,
-  clearPhotos: clearPhots,
 });
 
 export const Details = connect(
