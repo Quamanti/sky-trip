@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { find, isEmpty } from 'lodash';
+import { find, isEmpty, last } from 'lodash';
 import { useHistory } from 'react-router';
 import {
   Typography,
@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme => ({
   },
   cardMedia: {
     marginBottom: theme.spacing(1),
+    cursor: 'pointer',
   },
 }));
 
@@ -50,7 +51,8 @@ const DetailsPure = ({
 }) => {
   const classes = useStyles();
   const history = useHistory();
-  const [dialog, setDialog] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [image, setImage] = useState('');
 
   const data = find(locations, { id }) || {};
 
@@ -65,11 +67,11 @@ const DetailsPure = ({
   };
 
   const handleDialogOpenClick = () => {
-    setDialog(true);
+    setDeleteDialog(true);
   };
 
   const handleDialogCloseClick = () => {
-    setDialog(false);
+    setDeleteDialog(false);
   };
 
   const handleRemoveClick = () => {
@@ -78,6 +80,14 @@ const DetailsPure = ({
 
   const handleDrawerClose = () => {
     history.push('/locations');
+  };
+
+  const handleImageDialogOpen = (file) => {
+    setImage(file);
+  };
+
+  const handleImageDialogClose = () => {
+    setImage('');
   };
 
   const renderData = (
@@ -124,22 +134,39 @@ const DetailsPure = ({
 
   const renderImages = (
     <div className={classes.imagesContainer}>
-      {data.photos && data.photos.map(photo => (
+      {data.photos && data.photos.map(({ file, id: photoId }) => (
         <CardMedia
-          key={photo.id}
+          key={photoId}
           className={classes.cardMedia}
           component="img"
-          alt={`Image ${photo.id}`}
-          title={`Image ${photo.id}`}
-          image={photo.file}
+          alt={last(file.split('/'))}
+          title={last(file.split('/'))}
+          image={file}
+          onClick={() => handleImageDialogOpen(file)}
         />
       ))}
     </div>
   );
 
-  const renderDialog = (
+  const renderImageDialog = (
     <Dialog
-      open={dialog}
+      open={!!image}
+      onClose={handleImageDialogClose}
+      maxWidth="lg"
+    >
+      <CardMedia
+        component="img"
+        alt={last(image.split('/'))}
+        title={last(image.split('/'))}
+        image={image}
+        onClick={handleImageDialogClose}
+      />
+    </Dialog>
+  );
+
+  const renderDeleteDialog = (
+    <Dialog
+      open={deleteDialog}
       onClose={handleDialogCloseClick}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
@@ -168,7 +195,8 @@ const DetailsPure = ({
       {renderActions}
       <Divider />
       {renderImages}
-      {renderDialog}
+      {renderDeleteDialog}
+      {renderImageDialog}
     </div>
   );
 };
