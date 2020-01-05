@@ -57,10 +57,10 @@ const DetailsPure = ({
   const data = find(locations, { id }) || {};
 
   useEffect(() => {
-    if (isEmpty(data)) {
+    if (isEmpty(locations)) {
       history.push('/locations');
     }
-  }, [data, history]);
+  }, [locations, history]);
 
   const handleEditClick = () => {
     setEditDetails(true);
