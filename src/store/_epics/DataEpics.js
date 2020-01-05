@@ -12,7 +12,6 @@ import {
   POST_LOCATION,
   PATCHT_LOCATION,
   DELETE_LOCATION,
-  POST_PHOTO,
   DELETE_PHOTO,
 } from '../Data/actions';
 
@@ -105,24 +104,43 @@ export const postLocationEpic = (action$, store$, { ajax }) => (
 export const patchLocationEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(PATCHT_LOCATION),
-    mergeMap(({ payload }) => ajax.patch(
-      `/user/locations/${payload.id}/`,
-      payload,
-      {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': getCookies().csrftoken,
+    switchMap(
+      ({ payload: { files, ...location } }) => ajax.patch(
+        `/user/locations/${location.id}/`,
+        location,
+        {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookies().csrftoken,
+        },
+      ),
+      (action, response) => ([action, response]),
+    ),
+    mergeMap(
+      ([{ payload: { files, id } }, response]) => {
+        const responses = files && files.map(file => {
+          const data = new FormData();
+          data.append('location', id);
+          data.append('file', file);
+          return ajax.post(
+            '/photos/',
+            data,
+            {
+              'X-CSRFToken': getCookies().csrftoken,
+            },
+          );
+        });
+        return files ? forkJoin(...responses) : forkJoin(of(response));
       },
-    ).pipe(
-      mergeMap(() => of(
-        setMessage({
-          message: 'Location has been updated',
-          error: false,
-        }),
-        fetchLocations(),
-        setEditDetails(false),
-      )),
-      catchError(handleError),
+    ),
+    mergeMap(() => of(
+      setMessage({
+        message: 'Location has been updated',
+        error: false,
+      }),
+      fetchLocations(),
+      setEditDetails(false),
     )),
+    catchError(handleError),
   )
 );
 
@@ -144,22 +162,6 @@ export const deleteLocationEpic = (action$, store$, { ajax }) => (
         push('/locations'),
       )),
       catchError(handleError),
-    )),
-  )
-);
-
-export const postPhotoEpic = (action$, store$, { ajax }) => (
-  action$.pipe(
-    ofType(POST_PHOTO),
-    mergeMap(({ payload }) => ajax.post(
-      '/photos/',
-      payload,
-      {
-        'Content-Type': 'multipart/form-data',
-        'X-CSRFToken': getCookies().csrftoken,
-      },
-    ).pipe(
-      catchError((response) => ({ ...response, photoError: true })),
     )),
   )
 );
@@ -191,5 +193,4 @@ export const DataEpics = combineEpics(
   postLocationEpic,
   patchLocationEpic,
   deleteLocationEpic,
-  postPhotoEpic,
 );
