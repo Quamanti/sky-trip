@@ -42,9 +42,11 @@ export const AccountPage = () => {
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Paper className={classes.paper}>
-        <Link to="/locations">
-          &larr; Back to main page
-        </Link>
+        <div>
+          <Link to="/locations">
+            &larr; Back to main page
+          </Link>
+        </div>
         <UserData />
         <List>
           <Divider component="li" />
