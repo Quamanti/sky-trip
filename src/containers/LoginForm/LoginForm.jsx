@@ -5,8 +5,6 @@ import { Form, Field } from 'react-final-form';
 import {
   Button,
   TextField,
-  FormControlLabel,
-  Checkbox,
 } from '@material-ui/core';
 
 import { authenticate as auth } from '../../store/Users';
@@ -59,21 +57,6 @@ const LoginFormPure = ({ classes, authenticate, resetMessage }) => {
               />
             )}
           </Field>
-          {/* <Field name="remember" type="checkbox" initialValue={false}>
-            {props => (
-              <FormControlLabel
-                control={(
-                  <Checkbox
-                    color="primary"
-                    name={props.input.name}
-                    value={props.input.value}
-                    onChange={props.input.onChange}
-                  />
-                )}
-                label="Remember me"
-              />
-            )}
-          </Field> */}
           <Button
             type="submit"
             fullWidth
