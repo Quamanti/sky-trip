@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   dropzone: {
     flex: 1,
     display: 'flex',
@@ -22,19 +22,39 @@ const useStyles = makeStyles(theme => ({
 
 export const Dropzone = ({ input }) => {
   const classes = useStyles();
+  const [files, setFiles] = useState([]);
   const onDrop = useCallback(acceptedFiles => {
-    input.onChange(acceptedFiles);
-  }, [input]);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: ['image/png', 'image/bmp', 'image/jpeg'] });
+    setFiles([...files, ...acceptedFiles]);
+    input.onChange([...files, ...acceptedFiles]);
+  }, [input, files]);
+  const { getRootProps, getInputProps, isDragActive } = useDropzone(
+    { onDrop, accept: ['image/png', 'image/bmp', 'image/jpeg'] },
+  );
+
+  const handleRemoveFile = (file) => {
+    const newFiles = [...files];
+    newFiles.splice(newFiles.indexOf(file), 1);
+    setFiles(newFiles);
+  };
+
+  const filesList = files.map(file => (
+    <li key={file.path}>
+      {file.path}
+      <button type="button" onClick={() => handleRemoveFile(file)}>Remove File</button>
+    </li>
+  ));
 
   return (
-    <div {...getRootProps()} className={classes.dropzone}>
-      <input {...getInputProps()} />
-      {isDragActive ? (
-        <p>Drop the image files here...</p>
-      ) : (
-        <p>Drag and drop image files here, or click to select files</p>
-      )}
+    <div>
+      <div {...getRootProps()} className={classes.dropzone}>
+        <input {...getInputProps()} />
+        {isDragActive ? (
+          <p>Drop the image files here...</p>
+        ) : (
+          <p>Drag and drop image files here, or click to select files</p>
+        )}
+      </div>
+      <ul>{filesList}</ul>
     </div>
   );
 };

@@ -105,7 +105,7 @@ export const patchLocationEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(PATCHT_LOCATION),
     switchMap(
-      ({ payload: { files, ...location } }) => ajax.patch(
+      ({ payload: { files, filesToRemove, ...location } }) => ajax.patch(
         `/user/locations/${location.id}/`,
         location,
         {
@@ -115,22 +115,43 @@ export const patchLocationEpic = (action$, store$, { ajax }) => (
       ),
       (action, response) => ([action, response]),
     ),
-    mergeMap(
-      ([{ payload: { files, id } }, response]) => {
-        const responses = files && files.map(file => {
-          const data = new FormData();
-          data.append('location', id);
-          data.append('file', file);
-          return ajax.post(
-            '/photos/',
-            data,
-            {
-              'X-CSRFToken': getCookies().csrftoken,
-            },
-          );
-        });
-        return files ? forkJoin(...responses) : forkJoin(of(response));
+    switchMap(
+      ([action, response]) => {
+        if (action.payload.filesToRemove) {
+          const responses = action.payload.filesToRemove.map(fileId => (
+            ajax.delete(
+              `/photos/${fileId}/`,
+              {
+                'X-CSRFToken': getCookies().csrftoken,
+              },
+            )
+          ));
+          return forkJoin(...responses);
+        }
+        return forkJoin(of(response));
       },
+      (action, response) => ([action[0], response]),
+    ),
+    switchMap(
+      ([action, response]) => {
+        if (action.payload.files) {
+          const responses = action.payload.files && action.payload.files.map(file => {
+            const data = new FormData();
+            data.append('location', action.payload.id);
+            data.append('file', file);
+            return ajax.post(
+              '/photos/',
+              data,
+              {
+                'X-CSRFToken': getCookies().csrftoken,
+              },
+            );
+          });
+          return forkJoin(...responses);
+        }
+        return forkJoin(of(response));
+      },
+      (action, response) => ([action[0], response]),
     ),
     mergeMap(() => of(
       setMessage({

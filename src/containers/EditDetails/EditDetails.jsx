@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { find, isEmpty } from 'lodash';
+import { find, isEmpty, last } from 'lodash';
 import { Form, Field } from 'react-final-form';
 import { useHistory } from 'react-router-dom';
 import {
@@ -38,6 +38,7 @@ const EditDetailsPure = ({
 }) => {
   const classes = useStyles();
   const history = useHistory();
+  const [filesToRemove, setFilesToRemove] = useState([]);
 
   const data = find(locations, { id }) || {};
 
@@ -55,9 +56,9 @@ const EditDetailsPure = ({
         latitude: newPoint.lat,
       });
     } else {
-      const { file, ...selectedData } = formData;
       patchLocation({
-        ...selectedData,
+        ...formData,
+        ...(filesToRemove.length ? { filesToRemove } : undefined),
         id,
       });
     }
@@ -128,6 +129,18 @@ const EditDetailsPure = ({
     </>
   );
 
+  const handleRemoveFile = (photoId) => {
+    setFilesToRemove([...filesToRemove, photoId]);
+    data.photos.splice(data.photos.findIndex(photo => photo.id === photoId), 1);
+  };
+
+  const filesList = data.photos && data.photos.map(({ file, id: photoId }) => (
+    <li key={photoId}>
+      {last(file.split('/'))}
+      <button type="button" onClick={() => handleRemoveFile(photoId)}>Remove File</button>
+    </li>
+  ));
+
   return (
     <div className={classes.container}>
       <Form
@@ -140,6 +153,7 @@ const EditDetailsPure = ({
             {renderActions}
             <Divider />
             <Field name="files" component={Dropzone} />
+            <ul>{filesList}</ul>
           </form>
         )}
       </Form>
