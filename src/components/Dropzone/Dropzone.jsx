@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, IconButton } from '@material-ui/core';
+import ClearIcon from '@material-ui/icons/Clear';
 
 const useStyles = makeStyles(() => ({
   dropzone: {
@@ -10,13 +11,17 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     padding: '20px',
     borderWidth: '2px',
-    borderRadius: '2px',
+    borderRadius: '5px',
     borderColor: '#eeeeee',
     borderStyle: 'dashed',
     backgroundColor: '#fafafa',
     color: '#bdbdbd',
     outline: 'none',
     transition: 'border .24s ease-in-out',
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: '#eeeeee',
+    },
   },
 }));
 
@@ -40,7 +45,14 @@ export const Dropzone = ({ input }) => {
   const filesList = files.map(file => (
     <li key={file.path}>
       {file.path}
-      <button type="button" onClick={() => handleRemoveFile(file)}>Remove File</button>
+      <IconButton
+        color="secondary"
+        aria-label="remove file"
+        size="small"
+        onClick={() => handleRemoveFile(file)}
+      >
+        <ClearIcon />
+      </IconButton>
     </li>
   ));
 
@@ -51,7 +63,7 @@ export const Dropzone = ({ input }) => {
         {isDragActive ? (
           <p>Drop the image files here...</p>
         ) : (
-          <p>Drag and drop image files here, or click to select files</p>
+          <p>Drag and drop images here, or click to select files</p>
         )}
       </div>
       <ul>{filesList}</ul>

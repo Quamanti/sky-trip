@@ -190,7 +190,7 @@ const DetailsPure = ({
   );
 
   return (
-    <div className={classes.container}>
+    <div>
       {renderData}
       {renderActions}
       <Divider />

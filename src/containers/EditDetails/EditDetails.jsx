@@ -8,9 +8,11 @@ import {
   TextField,
   Button,
   Divider,
+  IconButton,
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
+import ClearIcon from '@material-ui/icons/Clear';
 
 import { Dropzone } from '../../components/Dropzone';
 
@@ -23,8 +25,21 @@ const useStyles = makeStyles(theme => ({
   button: {
     margin: theme.spacing(1),
   },
-  container: {
+  dataContainer: {
     padding: theme.spacing(1),
+  },
+  actionsContainer: {
+    marginTop: theme.spacing(1),
+    textAlign: 'right',
+  },
+  imagesContainer: {
+    margin: theme.spacing(1),
+  },
+  imageItem: {
+    listStyle: 'none',
+  },
+  removeButton: {
+    width: '5px',
   },
 }));
 
@@ -71,8 +86,8 @@ const EditDetailsPure = ({
     setEditDetails(false);
   };
 
-  const renderDetails = (
-    <>
+  const renderData = (
+    <div className={classes.dataContainer}>
       <Field name="title">
         {props => (
           <TextField
@@ -102,11 +117,11 @@ const EditDetailsPure = ({
           />
         )}
       </Field>
-    </>
+    </div>
   );
 
   const renderActions = (
-    <>
+    <div className={classes.actionsContainer}>
       <Button
         type="button"
         variant="contained"
@@ -126,34 +141,48 @@ const EditDetailsPure = ({
       >
         Save
       </Button>
-    </>
+    </div>
   );
 
   const handleRemoveFile = (photoId) => {
     setFilesToRemove([...filesToRemove, photoId]);
-    data.photos.splice(data.photos.findIndex(photo => photo.id === photoId), 1);
   };
 
-  const filesList = data.photos && data.photos.map(({ file, id: photoId }) => (
-    <li key={photoId}>
-      {last(file.split('/'))}
-      <button type="button" onClick={() => handleRemoveFile(photoId)}>Remove File</button>
-    </li>
-  ));
+  const filesList = data.photos && data.photos
+    .filter(({ id: photoId }) => (filesToRemove.findIndex(fileId => fileId === photoId) === -1))
+    .map(({ file, id: photoId }) => (
+      <li key={photoId} className={classes.imageItem}>
+        {last(file.split('/'))}
+        <IconButton
+          color="secondary"
+          aria-label="remove file"
+          size="small"
+          onClick={() => handleRemoveFile(photoId)}
+        >
+          <ClearIcon />
+        </IconButton>
+      </li>
+    ));
+
+  const renderImages = (
+    <div className={classes.imagesContainer}>
+      <Field name="files" component={Dropzone} />
+      <ul className={classes.imagesList}>{filesList}</ul>
+    </div>
+  );
 
   return (
-    <div className={classes.container}>
+    <div>
       <Form
         onSubmit={onSubmit}
         initialValues={{ title: data.title, description: data.description }}
       >
         {({ handleSubmit }) => (
           <form className={classes.form} onSubmit={handleSubmit}>
-            {renderDetails}
+            {renderData}
             {renderActions}
             <Divider />
-            <Field name="files" component={Dropzone} />
-            <ul>{filesList}</ul>
+            {renderImages}
           </form>
         )}
       </Form>
