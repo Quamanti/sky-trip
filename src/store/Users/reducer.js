@@ -6,9 +6,9 @@ import {
 
 const initialState = ({
   isAuthenticated: false,
-  name: '',
-  surname: '',
-  login: '',
+  firstName: '',
+  lastName: '',
+  username: '',
   email: '',
 });
 
@@ -22,9 +22,9 @@ export const reducer = (state = initialState, action) => {
     case GET_USER_DATA_RESULT:
       return ({
         ...state,
-        name: action.payload.name,
-        surname: action.payload.surname,
-        login: action.payload.login,
+        firstName: action.payload.firstName,
+        lastName: action.payload.lastName,
+        username: action.payload.username,
         email: action.payload.email,
       });
     case UNAUTHORIZE:

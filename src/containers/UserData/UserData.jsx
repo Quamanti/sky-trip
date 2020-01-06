@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Typography, Box } from '@material-ui/core';
 
 import { getUserData as getUser } from '../../store/Users';
-import { getUserData } from '../../store/_selectors/user.selectors';
+import { getUserData as getUserLocalData } from '../../store/_selectors/user.selectors';
 
 const UserDataPure = ({ userData, getUserData }) => {
   useEffect(() => {
@@ -13,20 +13,20 @@ const UserDataPure = ({ userData, getUserData }) => {
   return (
     <Box margin={2}>
       <Typography component="h1" variant="h4" color="primary" gutterBottom>
-        {`Hello ${userData.name} ${userData.surname}`}
+        {`Hello ${userData.firstName} ${userData.lastName}`}
       </Typography>
       <Typography>
-        {`Your username: ${userData.login}`}
+        {`Your username: ${userData.username}`}
       </Typography>
       <Typography>
-        {`Your email: ${userData.email}`}
+        {`Your email address: ${userData.email}`}
       </Typography>
     </Box>
   );
 };
 
 const mapStateToProps = (store) => ({
-  userData: getUserData(store),
+  userData: getUserLocalData(store),
 });
 
 const mapDispatchToProps = ({

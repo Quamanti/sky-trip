@@ -81,14 +81,14 @@ export const userDataEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(GET_USER_DATA),
     mergeMap(() => ajax.get(
-      '/SkyNoteServer/api/1.0/users',
+      '/user/',
     ).pipe(
       map(({ response }) => (
         getUserDataResult({
-          name: response.data.name,
-          surname: response.data.surname,
-          login: response.data.login,
-          email: response.data.email,
+          firstName: response.first_name,
+          lastName: response.last_name,
+          username: response.username,
+          email: response.email,
         })
       )),
       catchError(({ response }) => (
@@ -256,7 +256,7 @@ export const removeAccEpic = (action$, store$, { ajax }) => (
 
 export const UserEpics = combineEpics(
   authEpic,
-  // userDataEpic,
+  userDataEpic,
   logoutEpic,
   regEpic,
   // resEpic,

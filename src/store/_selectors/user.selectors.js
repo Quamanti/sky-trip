@@ -3,8 +3,8 @@ export const isAuthenticated = (store) => (
 );
 
 export const getUserData = (store) => ({
-  name: store.Users.name,
-  surname: store.Users.surname,
-  login: store.Users.login,
+  firstName: store.Users.firstName,
+  lastName: store.Users.lastName,
+  username: store.Users.username,
   email: store.Users.email,
 });
