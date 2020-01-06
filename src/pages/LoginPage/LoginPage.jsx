@@ -5,7 +5,7 @@ import {
   makeStyles,
   Container,
 } from '@material-ui/core';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
 import { LoginForm } from '../../containers/LoginForm';
 
 const useStyles = makeStyles((theme) => ({
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -44,7 +44,7 @@ export const LoginPage = () => {
     <Container maxWidth="xs">
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
+          <ExploreOutlinedIcon fontSize="large" />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign in

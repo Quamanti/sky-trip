@@ -10,7 +10,6 @@ import { MainLayout } from '../layouts/MainLayout/MainLayout';
 // Root components
 import { LoginPage } from '../pages/LoginPage';
 import { RegisterPage } from '../pages/RegisterPage';
-import { RecoverPasswordPage } from '../pages/RecoverPasswordPage';
 import { AccountPage } from '../pages/AccountPage';
 import { MainPage } from '../pages/MainPage/MainPage';
 
@@ -30,7 +29,6 @@ export const makeLoginRoutes = () => (
     <Switch>
       <Route exact path="/login" component={LoginPage} />
       <Route exact path="/register" component={RegisterPage} />
-      <Route exact path="/recover" component={RecoverPasswordPage} />
     </Switch>
   </LoginLayout>
 );

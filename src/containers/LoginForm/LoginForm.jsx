@@ -7,7 +7,6 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
-  Grid,
 } from '@material-ui/core';
 
 import { authenticate as auth } from '../../store/Users';
@@ -85,18 +84,9 @@ const LoginFormPure = ({ classes, authenticate, resetMessage }) => {
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link to="/recover" onClick={handleClick}>
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link to="/register" onClick={handleClick}>
-                Don&apos;t have an account? Sign Up
-              </Link>
-            </Grid>
-          </Grid>
+          <Link to="/register" onClick={handleClick}>
+            Don&apos;t have an account? Sign Up
+          </Link>
         </form>
       )}
     </Form>

@@ -11,7 +11,6 @@ import {
   LOGOUT,
   unauthorize,
   REGISTER,
-  RESET_PASSWORD,
   CHANGE_PASSWORD,
   CHANGE_USERNAME,
   REMOVE_ACCOUNT,
@@ -148,30 +147,6 @@ export const regEpic = (action$, store$, { ajax }) => (
   )
 );
 
-export const resEpic = (action$, store$, { ajax }) => (
-  action$.pipe(
-    ofType(RESET_PASSWORD),
-    mergeMap(action => ajax.post(
-      '/SkyNoteServer/api/1.0/users/recover',
-      action.payload,
-      { 'Content-Type': 'application/x-www-form-urlencoded' },
-    ).pipe(
-      map(({ response }) => (
-        setMessage({
-          message: response.message,
-          error: false,
-        })
-      )),
-      catchError(({ response }) => (
-        of(setMessage({
-          message: response.message,
-          error: true,
-        }))
-      )),
-    )),
-  )
-);
-
 export const changePassEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(CHANGE_PASSWORD),
@@ -264,7 +239,6 @@ export const UserEpics = combineEpics(
   userDataEpic,
   logoutEpic,
   regEpic,
-  // resEpic,
   // changePassEpic,
   changeUserEpic,
   // removeAccEpic,
