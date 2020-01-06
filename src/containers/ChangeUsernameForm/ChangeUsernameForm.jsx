@@ -17,12 +17,12 @@ const ChangeUsernameFormPure = ({ changeUsername }) => {
         <form onSubmit={handleSubmit}>
           <Grid container justify="space-between" alignItems="center">
             <Grid item>
-              <Field name="newLogin">
+              <Field name="username">
                 {props => (
                   <TextField
                     margin="dense"
                     label="New username"
-                    id="newLogin"
+                    id="username"
                     name={props.input.name}
                     value={props.input.value}
                     onChange={props.input.onChange}
@@ -36,7 +36,7 @@ const ChangeUsernameFormPure = ({ changeUsername }) => {
                 variant="contained"
                 size="small"
                 color="primary"
-                disabled={!values.newLogin || submitting}
+                disabled={!values.username || submitting}
               >
                 Change username
               </Button>

@@ -7,7 +7,6 @@ import {
   AUTHENTICATE,
   authenticateSuccess,
   GET_USER_DATA,
-  getUserData,
   getUserDataResult,
   LOGOUT,
   unauthorize,
@@ -202,19 +201,25 @@ export const changePassEpic = (action$, store$, { ajax }) => (
 export const changeUserEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(CHANGE_USERNAME),
-    mergeMap(action => ajax.post(
-      '/SkyNoteServer/api/1.0/users/rename',
+    mergeMap(action => ajax.patch(
+      '/user/',
       action.payload,
       {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': getCookies().csrftoken,
+        'Content-Type': 'application/json',
       },
     ).pipe(
       mergeMap(({ response }) => (of(
         setMessage({
-          message: response.message,
+          message: 'Username has been changed',
           error: false,
         }),
-        getUserData(),
+        getUserDataResult({
+          firstName: response.first_name,
+          lastName: response.last_name,
+          username: response.username,
+          email: response.email,
+        }),
       )
       )),
       catchError(({ response }) => (
@@ -261,6 +266,6 @@ export const UserEpics = combineEpics(
   regEpic,
   // resEpic,
   // changePassEpic,
-  // changeUserEpic,
+  changeUserEpic,
   // removeAccEpic,
 );
