@@ -120,26 +120,26 @@ export const regEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(REGISTER),
     mergeMap(action => ajax.post(
-      'user/register',
+      'user/register/',
       action.payload,
       { 'Content-Type': 'application/json' },
     ).pipe(
       map(() => (
         setMessage({
-          message: 'Registration successful',
+          message: 'Registration successful.',
           error: false,
         })
       )),
-      endWith('/login'),
-      catchError(({ status }) => {
-        if (status === 404) {
+      endWith(push('/login')),
+      catchError(({ status, response }) => {
+        if (status === 400) {
           return of(setMessage({
-            message: 'Incorrect data were provided',
+            message: response[Object.keys(response)[0]],
             error: true,
           }));
         }
         return of(setMessage({
-          message: 'Something went wrong',
+          message: 'Something went wrong.',
           error: true,
         }));
       }),
@@ -197,12 +197,18 @@ export const changeUserEpic = (action$, store$, { ajax }) => (
         }),
       )
       )),
-      catchError(({ response }) => (
-        of(setMessage({
-          message: response.message,
+      catchError(({ status }) => {
+        if (status === 400) {
+          return of(setMessage({
+            message: 'A user with that username already exists',
+            error: true,
+          }));
+        }
+        return of(setMessage({
+          message: 'Something went wrong.',
           error: true,
-        }))
-      )),
+        }));
+      }),
     )),
   )
 );
