@@ -61,7 +61,6 @@ const DeleteAccountPureForm = ({ removeAccount }) => {
                 <Field name="password">
                   {props => (
                     <TextField
-                      // margin="small"
                       label="Password"
                       type="password"
                       id="password"
