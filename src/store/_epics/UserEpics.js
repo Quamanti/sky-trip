@@ -150,7 +150,7 @@ export const regEpic = (action$, store$, { ajax }) => (
 export const changePassEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(CHANGE_PASSWORD),
-    mergeMap(action => ajax.put(
+    mergeMap(action => ajax.patch(
       '/user/change-password/',
       action.payload,
       {
@@ -164,12 +164,18 @@ export const changePassEpic = (action$, store$, { ajax }) => (
           error: false,
         })
       )),
-      catchError(({ status }) => (
-        of(setMessage({
+      catchError(({ status }) => {
+        if (status === 400) {
+          return of(setMessage({
+            message: 'Wrong password',
+            error: true,
+          }));
+        }
+        return of(setMessage({
           message: 'Something went wrong',
           error: true,
-        }))
-      )),
+        }));
+      }),
     )),
   )
 );
@@ -253,7 +259,7 @@ export const UserEpics = combineEpics(
   userDataEpic,
   logoutEpic,
   regEpic,
-  // changePassEpic,
+  changePassEpic,
   changeUserEpic,
   removeAccEpic,
 );
