@@ -18,12 +18,12 @@ const ChangePasswordFormPure = ({ changePassword }) => {
           <Grid container justify="space-between" alignItems="center">
             <Grid item>
               <div>
-                <Field name="oldPassword">
+                <Field name="password">
                   {props => (
                     <TextField
                       label="Old password"
                       type="password"
-                      id="oldPassword"
+                      id="password"
                       name={props.input.name}
                       value={props.input.value}
                       onChange={props.input.onChange}
@@ -31,13 +31,13 @@ const ChangePasswordFormPure = ({ changePassword }) => {
                   )}
                 </Field>
               </div>
-              <Field name="newPassword">
+              <Field name="new_password">
                 {props => (
                   <TextField
                     margin="dense"
                     label="New password"
                     type="password"
-                    id="newPassword"
+                    id="new_password"
                     name={props.input.name}
                     value={props.input.value}
                     onChange={props.input.onChange}
@@ -51,7 +51,7 @@ const ChangePasswordFormPure = ({ changePassword }) => {
                 variant="contained"
                 size="small"
                 color="primary"
-                disabled={!values.oldPassword || !values.newPassword || submitting}
+                disabled={!values.password || !values.new_password || submitting}
               >
                 Change password
               </Button>

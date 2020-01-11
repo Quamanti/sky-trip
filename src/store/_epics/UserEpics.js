@@ -150,22 +150,23 @@ export const regEpic = (action$, store$, { ajax }) => (
 export const changePassEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(CHANGE_PASSWORD),
-    mergeMap(action => ajax.post(
-      '/SkyNoteServer/api/1.0/users/changePassword',
+    mergeMap(action => ajax.put(
+      '/user/change-password/',
       action.payload,
       {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': getCookies().csrftoken,
+        'Content-Type': 'application/json',
       },
     ).pipe(
-      map(({ response }) => (
+      map(() => (
         setMessage({
-          message: response.message,
+          message: 'Password has been changed',
           error: false,
         })
       )),
-      catchError(({ response }) => (
+      catchError(({ status }) => (
         of(setMessage({
-          message: response.message,
+          message: 'Something went wrong',
           error: true,
         }))
       )),
@@ -217,25 +218,32 @@ export const removeAccEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(REMOVE_ACCOUNT),
     mergeMap(action => ajax.post(
-      '/SkyNoteServer/api/1.0/users/delete',
+      '/user/delete-account/',
       action.payload,
       {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': getCookies().csrftoken,
+        'Content-Type': 'application/json',
       },
     ).pipe(
-      map(({ response }) => (
+      map(() => (
         setMessage({
-          message: response.message,
+          message: 'Account has been deleted',
           error: false,
         })
       )),
       endWith(push('/login')),
-      catchError(({ response }) => (
-        of(setMessage({
-          message: response.message,
+      catchError(({ status }) => {
+        if (status === 400) {
+          return of(setMessage({
+            message: 'Wrong password',
+            error: true,
+          }));
+        }
+        return of(setMessage({
+          message: 'Something went wrong',
           error: true,
-        }))
-      )),
+        }));
+      }),
     )),
   )
 );
@@ -247,5 +255,5 @@ export const UserEpics = combineEpics(
   regEpic,
   // changePassEpic,
   changeUserEpic,
-  // removeAccEpic,
+  removeAccEpic,
 );

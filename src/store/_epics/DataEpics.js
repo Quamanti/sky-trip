@@ -48,7 +48,7 @@ export const getLocationsEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(GET_LOCATIONS),
     mergeMap(() => ajax.get(
-      '/user/locations/',
+      '/locations/',
     ).pipe(
       map(({ response }) => getLocationsSuccess(response)),
       catchError(handleError),
@@ -61,7 +61,7 @@ export const postLocationEpic = (action$, store$, { ajax }) => (
     ofType(POST_LOCATION),
     switchMap(
       ({ payload: { files, ...location } }) => ajax.post(
-        '/user/locations/',
+        '/locations/',
         location,
         {
           'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export const patchLocationEpic = (action$, store$, { ajax }) => (
     ofType(PATCHT_LOCATION),
     switchMap(
       ({ payload: { files, filesToRemove, ...location } }) => ajax.patch(
-        `/user/locations/${location.id}/`,
+        `/locations/${location.id}/`,
         location,
         {
           'Content-Type': 'application/json',
@@ -169,7 +169,7 @@ export const deleteLocationEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(DELETE_LOCATION),
     mergeMap(({ payload }) => ajax.delete(
-      `/user/locations/${payload}/`,
+      `/locations/${payload}/`,
       {
         'X-CSRFToken': getCookies().csrftoken,
       },
@@ -191,7 +191,7 @@ export const deletePhotoEpic = (action$, store$, { ajax }) => (
   action$.pipe(
     ofType(DELETE_PHOTO),
     mergeMap(({ payload }) => ajax.delete(
-      `/user/locations/${payload}/`,
+      `/locations/${payload}/`,
       {
         'X-CSRFToken': getCookies().csrftoken,
       },
