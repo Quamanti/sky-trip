@@ -100,7 +100,7 @@ export const TopBarPure = ({ logout, history }) => {
           To add a location, click on chosen position on the map. Enter a title and (optionally) description then press SAVE.
         </DialogContentText>
         <DialogContentText id="alert-dialog-description">
-          To view location details, simply click on its marker. You can edit the details by pressing EDIT or you can delte the marker by pressing DELETE.
+          To view location details, simply click on its marker. You can edit the details by pressing EDIT or you can delete the marker by pressing DELETE.
         </DialogContentText>
       </DialogContent>
       <DialogActions>

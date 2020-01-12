@@ -69,6 +69,10 @@ const MapPure = ({
       onClick={handleMapClick}
       zoomControl={false}
       worldCopyJump
+      maxBounds={[
+        [-90, -Infinity],
+        [90, Infinity],
+      ]}
     >
       <TileLayer
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
