@@ -1,4 +1,6 @@
-# Application for project "Wspomnienia z wakacji"
+# Sky Trip application for the university project "Wspomnienia z wakacji"
+
+This application uses [PaiBackend](https://github.com/kamisow677/PaiBackend) server.
 
 ## Available Scripts
 
