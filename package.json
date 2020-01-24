@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "repository": "https://github.com/Quamanti/sky-note.git",
   "author": "Quamanti <pawelsz095@gmail.com>",
-  "private": true,
+  "private": false,
+  "license": "MIT",
   "dependencies": {
     "@material-ui/core": "^4.8.1",
     "@material-ui/icons": "^4.5.1",
